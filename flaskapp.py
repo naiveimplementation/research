@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 app = Flask(__name__)
 import jinja2
 
@@ -14,12 +14,24 @@ session = DBSession()
 
 
 ### Pages
-@app.route('/')
-def Show():
+@app.route('/', methods = ['POST', 'GET'])
+def Home():
+	if request.method == "POST":
+		temp = int(request.form.get("temp", 0))
+		fever = request.form.get("fever", False)
+		if fever == "True":
+			fever = True
+		else:
+			fever = False
+
+		data_point = Temp(temp=temp, fever=fever)
+		session.add(data_point)
+		session.commit()
+		return render_template('index.html')
 	return render_template('index.html')
 
 @app.route('/api')
-def mammals():
+def points():
 	temps = session.query(Temp).all()
 	return jsonify(Temp=[t.serialize for t in temps])
 
