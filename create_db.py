@@ -4,20 +4,22 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-engine = create_engine('sqlite:///temperatures.db')
+engine = create_engine('sqlite:///data.db')
 Base.metadata.bind = engine
 
-class Temp(Base):
-	__tablename__ = 'temp'
+class Datapoint(Base):
+	__tablename__ = 'data'
 	id = Column(Integer, primary_key=True)
-	temp = Column(Float)
-	fever = Column(Boolean)
+	grade = Column(Integer)
+	bump = Column(Integer)
+	speed = Column(Boolean)
 
 	@property
 	def serialize(self):
 		return {
-			'temp': self.temp,
-			'fever': self.fever
+			'grade': self.grade,
+			'bump': self.bump,
+			'speed': self.speed
 		}
 
 Base.metadata.create_all(engine)

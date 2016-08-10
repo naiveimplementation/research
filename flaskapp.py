@@ -6,6 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from create_db import Base, Temp
 
+from Algorithm_NB import nb
+
 engine = create_engine('sqlite:///temperatures.db')
 Base.metadata.bind = engine
 
@@ -32,8 +34,12 @@ def Home():
 
 @app.route('/api')
 def points():
+	printing()
 	temps = session.query(Temp).all()
 	return jsonify(Temp=[t.serialize for t in temps])
+
+def printing():
+	print(nb())
 
 if __name__== "__main__":
 	app.run(debug=True)
