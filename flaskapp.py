@@ -4,11 +4,11 @@ import jinja2
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from create_db import Base, Temp
+from create_db import Base, Datapoint
 
 from Algorithm_NB import nb
 
-engine = create_engine('sqlite:///temperatures.db')
+engine = create_engine('sqlite:///data.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -34,9 +34,8 @@ def Home():
 
 @app.route('/api')
 def points():
-	printing()
-	temps = session.query(Temp).all()
-	return jsonify(Temp=[t.serialize for t in temps])
+	data_points = session.query(Datapoint).all()
+	return jsonify(Datapoint=[dp.serialize for dp in data_points])
 
 def printing():
 	print(nb())

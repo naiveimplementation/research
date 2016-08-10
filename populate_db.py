@@ -1,22 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from create_db import Base, Temp
+from create_db import Base, Datapoint
 import random
 
-engine = create_engine('sqlite:///temperatures.db')
+engine = create_engine('sqlite:///data.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
-def addTemp():
-	t = Temp(temp = 97, fever=True)
-	session.add(t)
-	session.commit()
-
-for x in range(1):
-	addTemp()
 	
-def makeTerrainData(n_points=1000):
+def makeTerrainData(n_points=100):
 ###############################################################################
 ### make the toy dataset
     random.seed(42)
@@ -54,3 +46,18 @@ def makeTerrainData(n_points=1000):
             , "slow":{"grade":grade_bkg, "bumpiness":bumpy_bkg}}
 
     return X_train, y_train, X_test, y_test
+
+features_train, labels_train, features_test, labels_test = makeTerrainData()
+
+print(features_train)
+
+for p in range(len(features_train)):
+	dp = Datapoint(grade=features_train[p][0], bump=features_train[p][1], speed=labels_train[p])
+	session.add(dp)
+	session.commit()
+	#print(labels_train[p])
+	#dp = Datapoint(grade=features_train[])
+
+
+
+
